@@ -365,7 +365,7 @@ DEFINE_PROCESS_META_PROPS(Border);
 {
   [_reactSubviews insertObject:subview atIndex:atIndex];
   if (![self isCSSLeafNode]) {
-    CSSNodeInsertChild(_cssNode, subview.cssNode, atIndex);
+    CSSNodeInsertChild(_cssNode, subview.cssNode, (uint32_t)atIndex);
   }
   subview->_superview = self;
   _didUpdateSubviews = YES;
@@ -555,10 +555,13 @@ RCT_DIMENSION_PROPERTY(Left, left, PositionStart)
 
 - (void)setFrame:(CGRect)frame
 {
-  CSSNodeStyleSetPositionLeft(_cssNode, CGRectGetMinX(frame));
-  CSSNodeStyleSetPositionTop(_cssNode, CGRectGetMinY(frame));
-  CSSNodeStyleSetWidth(_cssNode, CGRectGetWidth(frame));
-  CSSNodeStyleSetHeight(_cssNode, CGRectGetHeight(frame));
+  if (!CGRectEqualToRect(frame, _frame)) {
+    _frame = frame;
+    CSSNodeStyleSetPositionLeft(_cssNode, CGRectGetMinX(frame));
+    CSSNodeStyleSetPositionTop(_cssNode, CGRectGetMinY(frame));
+    CSSNodeStyleSetWidth(_cssNode, CGRectGetWidth(frame));
+    CSSNodeStyleSetHeight(_cssNode, CGRectGetHeight(frame));
+  }
 }
 
 static inline void RCTAssignSuggestedDimension(CSSNodeRef cssNode, CSSDimension dimension, CGFloat amount)

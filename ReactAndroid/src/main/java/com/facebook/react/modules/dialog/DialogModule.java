@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import com.facebook.common.logging.FLog;
-import com.facebook.infer.annotation.Assertions;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -29,14 +28,14 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.annotations.ReactModule;
 import com.facebook.react.common.MapBuilder;
 
+@ReactModule(name = "DialogManagerAndroid")
 public class DialogModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
 
   /* package */ static final String FRAGMENT_TAG =
       "com.facebook.catalyst.react.dialog.DialogModule";
-
-  /* package */ static final String NAME = "DialogManagerAndroid";
 
   /* package */ static final String ACTION_BUTTON_CLICKED = "buttonClicked";
   /* package */ static final String ACTION_DISMISSED = "dismissed";
@@ -46,6 +45,7 @@ public class DialogModule extends ReactContextBaseJavaModule implements Lifecycl
   /* package */ static final String KEY_BUTTON_NEGATIVE = "buttonNegative";
   /* package */ static final String KEY_BUTTON_NEUTRAL = "buttonNeutral";
   /* package */ static final String KEY_ITEMS = "items";
+  /* package */ static final String KEY_CANCELABLE = "cancelable";
 
   /* package */ static final Map<String, Object> CONSTANTS = MapBuilder.<String, Object>of(
       ACTION_BUTTON_CLICKED, ACTION_BUTTON_CLICKED,
@@ -58,11 +58,6 @@ public class DialogModule extends ReactContextBaseJavaModule implements Lifecycl
 
   public DialogModule(ReactApplicationContext reactContext) {
     super(reactContext);
-  }
-
-  @Override
-  public String getName() {
-    return NAME;
   }
 
   /**
@@ -129,6 +124,9 @@ public class DialogModule extends ReactContextBaseJavaModule implements Lifecycl
       if (isUsingSupportLibrary()) {
         SupportAlertFragment alertFragment = new SupportAlertFragment(actionListener, arguments);
         if (isInForeground) {
+          if (arguments.containsKey(KEY_CANCELABLE)) {
+            alertFragment.setCancelable(arguments.getBoolean(KEY_CANCELABLE));
+          }
           alertFragment.show(mSupportFragmentManager, FRAGMENT_TAG);
         } else {
           mFragmentToShow = alertFragment;
@@ -136,6 +134,9 @@ public class DialogModule extends ReactContextBaseJavaModule implements Lifecycl
       } else {
         AlertFragment alertFragment = new AlertFragment(actionListener, arguments);
         if (isInForeground) {
+          if (arguments.containsKey(KEY_CANCELABLE)) {
+            alertFragment.setCancelable(arguments.getBoolean(KEY_CANCELABLE));
+          }
           alertFragment.show(mFragmentManager, FRAGMENT_TAG);
         } else {
           mFragmentToShow = alertFragment;
@@ -240,6 +241,9 @@ public class DialogModule extends ReactContextBaseJavaModule implements Lifecycl
         itemsArray[i] = items.getString(i);
       }
       args.putCharSequenceArray(AlertFragment.ARG_ITEMS, itemsArray);
+    }
+    if (options.hasKey(KEY_CANCELABLE)) {
+      args.putBoolean(KEY_CANCELABLE, options.getBoolean(KEY_CANCELABLE));
     }
 
     fragmentManagerHelper.showNewAlert(mIsInForeground, args, actionCallback);

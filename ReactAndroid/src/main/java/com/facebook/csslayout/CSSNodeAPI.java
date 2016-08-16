@@ -58,16 +58,8 @@ public interface CSSNodeAPI<CSSNodeType extends CSSNodeAPI> {
   void setPadding(int spacingType, float padding);
   Spacing getBorder();
   void setBorder(int spacingType, float border);
-  Spacing getPositionValue();
-  void setPositionValue(int spacingType, float position);
-  float getPositionTop();
-  void setPositionTop(float positionTop);
-  float getPositionBottom();
-  void setPositionBottom(float positionBottom);
-  float getPositionLeft();
-  void setPositionLeft(float positionLeft);
-  float getPositionRight();
-  void setPositionRight(float positionRight);
+  Spacing getPosition();
+  void setPosition(int spacingType, float position);
   float getStyleWidth();
   void setStyleWidth(float width);
   float getStyleHeight();
