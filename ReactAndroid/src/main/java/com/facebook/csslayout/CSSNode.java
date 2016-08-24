@@ -319,6 +319,19 @@ public class CSSNode implements CSSNodeAPI<CSSNode> {
     }
   }
 
+  @Override
+  public CSSAlign getAlignContent() {
+    return style.alignContent;
+  }
+
+  @Override
+  public void setAlignContent(CSSAlign alignContent) {
+    if (style.alignContent != alignContent) {
+      style.alignContent = alignContent;
+      dirty();
+    }
+  }
+
   /**
    * Get this node's position type, as defined by style.
    */
@@ -538,16 +551,6 @@ public class CSSNode implements CSSNodeAPI<CSSNode> {
   @Override
   public CSSDirection getLayoutDirection() {
     return layout.direction;
-  }
-
-  /**
-   * Set a default padding (left/top/right/bottom) for this node.
-   */
-  @Override
-  public void setDefaultPadding(int spacingType, float padding) {
-    if (style.padding.setDefault(spacingType, padding)) {
-      dirty();
-    }
   }
 
   /**

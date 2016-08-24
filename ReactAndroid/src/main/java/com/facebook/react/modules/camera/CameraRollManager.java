@@ -17,9 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -50,7 +48,6 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
-import com.facebook.react.bridge.annotations.ReactModule;
 import com.facebook.react.common.ReactConstants;
 
 // TODO #6015104: rename to something less iOSish
@@ -58,7 +55,6 @@ import com.facebook.react.common.ReactConstants;
  * {@link NativeModule} that allows JS to interact with the photos on the device (i.e.
  * {@link MediaStore.Images}).
  */
-@ReactModule(name = "RKCameraRollManager")
 public class CameraRollManager extends ReactContextBaseJavaModule {
 
   private static final String ERROR_UNABLE_TO_LOAD = "E_UNABLE_TO_LOAD";
@@ -101,8 +97,8 @@ public class CameraRollManager extends ReactContextBaseJavaModule {
   }
 
   @Override
-  public Map<String, Object> getConstants() {
-    return Collections.emptyMap();
+  public String getName() {
+    return "RKCameraRollManager";
   }
 
   /**
